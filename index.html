@@ -1,0 +1,2291 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#ffffff">
+<title>JAURA MUSIC</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#fff;
+    color:#111;
+    transition:.3s;
+}
+
+button,input{
+    font-family:inherit;
+}
+
+/* ================= SPLASH ================= */
+
+#splashScreen{
+    position:fixed;
+    inset:0;
+    background:#080808;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:99999;
+    transition:opacity .6s ease,visibility .6s;
+}
+
+.splash-content{
+    text-align:center;
+    animation:zoomIn .8s ease-out;
+}
+
+.splash-logo{
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-bottom:25px;
+
+    box-shadow:
+        0 0 35px rgba(160,32,240,.6),
+        0 0 80px rgba(160,32,240,.2);
+
+    animation:splashPulse 2s ease-in-out infinite;
+}
+
+.splash-loader{
+    width:38px;
+    height:38px;
+    margin:auto;
+
+    border:3px solid rgba(160,32,240,.2);
+    border-top:3px solid #b026ff;
+    border-radius:50%;
+
+    animation:spin 1s linear infinite;
+}
+
+@keyframes zoomIn{
+    from{
+        transform:scale(.7);
+        opacity:0;
+    }
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+@keyframes splashPulse{
+    0%,100%{
+        transform:scale(1);
+    }
+    50%{
+        transform:scale(1.04);
+    }
+}
+
+@keyframes spin{
+    from{
+        transform:rotate(0);
+    }
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* ================= HEADER ================= */
+
+.header{
+    height:72px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 18px;
+
+    border-bottom:1px solid #eee;
+
+    background:rgba(255,255,255,.97);
+    backdrop-filter:blur(15px);
+
+    position:sticky;
+    top:0;
+
+    z-index:500;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:900;
+    font-style:italic;
+}
+
+.header-icons{
+    display:flex;
+    gap:18px;
+    align-items:center;
+    font-size:27px;
+}
+
+.menu-button{
+    border:0;
+    background:none;
+    font-size:28px;
+    cursor:pointer;
+}
+
+/* ================= SEARCH ================= */
+
+.search-area{
+    padding:14px 16px 7px;
+    background:#fff;
+}
+
+.search{
+    height:54px;
+
+    border:1px solid #ddd;
+    border-radius:30px;
+
+    display:flex;
+    overflow:hidden;
+
+    background:#fafafa;
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,.06);
+}
+
+.search input{
+    flex:1;
+
+    border:0;
+    outline:0;
+
+    background:transparent;
+
+    padding:0 19px;
+
+    font-size:17px;
+}
+
+.search button{
+    width:64px;
+
+    border:0;
+    border-left:1px solid #ddd;
+
+    background:#f3f3f3;
+
+    font-size:23px;
+
+    cursor:pointer;
+}
+
+/* ================= CATEGORIES ================= */
+
+.categories{
+    display:flex;
+    gap:10px;
+
+    overflow-x:auto;
+
+    padding:9px 16px 16px;
+
+    scrollbar-width:none;
+
+    background:#fff;
+}
+
+.categories::-webkit-scrollbar{
+    display:none;
+}
+
+.category{
+    flex:none;
+
+    padding:11px 19px;
+
+    border-radius:13px;
+
+    background:#f0f0f0;
+
+    font-weight:bold;
+    font-size:15px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.category:active{
+    transform:scale(.95);
+}
+
+.category.active{
+    background:#111;
+    color:#fff;
+}
+
+/* =================================================
+   PREMIUM STICKY PLAYER
+   ================================================= */
+
+#playerContainer{
+    display:none;
+
+    position:sticky;
+
+    /*
+       Header-এর নিচে আটকে থাকবে
+    */
+    top:72px;
+
+    z-index:400;
+
+    width:100%;
+
+    background:#050505;
+
+    margin:0 0 18px;
+
+    overflow:hidden;
+
+    border-radius:0 0 18px 18px;
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.32),
+        0 3px 12px rgba(0,0,0,.12);
+
+    animation:
+        premiumPlayer .28s
+        cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes premiumPlayer{
+
+    from{
+        opacity:0;
+        transform:
+            translateY(-14px)
+            scale(.985);
+    }
+
+    to{
+        opacity:1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+/* ================= PLAYER TOP ================= */
+
+.player-top{
+
+    position:absolute;
+
+    top:0;
+    left:0;
+    right:0;
+
+    height:62px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 12px;
+
+    z-index:5;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.78),
+            rgba(0,0,0,0)
+        );
+}
+
+/* ================= BACK BUTTON ================= */
+
+.back{
+
+    width:43px;
+    height:43px;
+
+    border:1px solid rgba(255,255,255,.15);
+
+    border-radius:50%;
+
+    background:
+        rgba(0,0,0,.48);
+
+    backdrop-filter:blur(12px);
+
+    color:#fff;
+
+    font-size:34px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 5px 18px rgba(0,0,0,.35);
+
+    transition:.2s;
+}
+
+.back:active{
+    transform:scale(.88);
+}
+
+/* ================= DEVIL BUTTON ================= */
+
+.devil-button{
+
+    width:43px;
+    height:43px;
+
+    border-radius:50%;
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    background:
+        rgba(15,15,15,.65);
+
+    backdrop-filter:blur(12px);
+
+    color:#fff;
+
+    font-size:23px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 5px 18px rgba(0,0,0,.35);
+
+    transition:.2s;
+}
+
+.devil-button:active{
+    transform:scale(.88);
+}
+
+/* ================= YOUTUBE PLAYER ================= */
+
+/*
+   ঠিক thumbnail-এর মতো 16:9
+   কোনো অতিরিক্ত player-info নেই
+*/
+
+.youtube-player{
+
+    width:100%;
+
+    aspect-ratio:16/9;
+
+    background:#000;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+#ytFrame{
+
+    width:100%;
+    height:100%;
+
+    display:block;
+
+    border:0;
+}
+
+/*
+   নিচের পুরোনো player text সম্পূর্ণ বন্ধ
+*/
+
+.player-info,
+.note{
+    display:none !important;
+}
+
+/* ================= VIDEO LIST ================= */
+
+#results{
+    background:#fff;
+    padding-bottom:30px;
+}
+
+.video{
+    margin-bottom:25px;
+
+    cursor:pointer;
+
+    background:#fff;
+
+    overflow:hidden;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease;
+}
+
+.video:active{
+    transform:scale(.992);
+}
+
+.thumbnail-wrap{
+
+    width:100%;
+
+    position:relative;
+
+    background:#111;
+
+    overflow:hidden;
+}
+
+.thumbnail{
+
+    width:100%;
+
+    aspect-ratio:16/9;
+
+    object-fit:cover;
+
+    display:block;
+
+    transition:
+        transform .35s ease;
+}
+
+.video:hover .thumbnail{
+    transform:scale(1.015);
+}
+
+.video-info{
+
+    display:flex;
+
+    gap:12px;
+
+    padding:13px 15px 0;
+}
+
+.channel{
+
+    width:43px;
+    height:43px;
+
+    min-width:43px;
+
+    border-radius:50%;
+
+    background:#111;
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:20px;
+}
+
+.details{
+    flex:1;
+    min-width:0;
+}
+
+.title-row{
+    display:flex;
+    gap:8px;
+}
+
+.title{
+
+    flex:1;
+
+    font-size:16px;
+
+    line-height:1.4;
+
+    font-weight:bold;
+}
+
+.more{
+
+    font-size:23px;
+
+    color:#777;
+}
+
+.meta{
+
+    color:#666;
+
+    font-size:12px;
+
+    margin-top:6px;
+}
+
+/* ================= HOME ================= */
+
+.home-message{
+
+    text-align:center;
+
+    padding:45px 20px;
+
+    color:#777;
+}
+
+.home-message h2{
+
+    color:#222;
+
+    margin-bottom:8px;
+}
+
+/* ================= LOADING ================= */
+
+.loading{
+
+    padding:45px 15px;
+
+    text-align:center;
+
+    color:#777;
+}
+
+.loading-spinner{
+
+    width:38px;
+    height:38px;
+
+    border:3px solid #ddd;
+
+    border-top-color:#111;
+
+    border-radius:50%;
+
+    margin:
+        0 auto 14px;
+
+    animation:
+        spin 1s linear infinite;
+}
+
+.error{
+
+    padding:30px 18px;
+
+    text-align:center;
+
+    color:#c00;
+
+    line-height:1.5;
+}
+
+/* ================= BACKGROUND MENU ================= */
+
+.bg-menu{
+
+    position:fixed;
+
+    top:65px;
+    right:12px;
+
+    width:190px;
+
+    background:#fff;
+
+    border:1px solid #eee;
+
+    border-radius:16px;
+
+    padding:10px;
+
+    box-shadow:
+        0 15px 45px rgba(0,0,0,.18);
+
+    z-index:1000;
+
+    display:none;
+}
+
+.bg-menu.show{
+    display:block;
+}
+
+.bg-title{
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    color:#777;
+
+    padding:7px 9px;
+}
+
+.bg-option{
+
+    width:100%;
+
+    border:0;
+
+    background:#f5f5f5;
+
+    padding:11px;
+
+    margin:3px 0;
+
+    border-radius:10px;
+
+    text-align:left;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    transition:.2s;
+}
+
+.bg-option:active{
+    transform:scale(.97);
+}
+
+/* ================= SOUND ================= */
+
+.sound-panel{
+
+    position:fixed;
+
+    left:0;
+    right:0;
+
+    bottom:-100%;
+
+    max-height:88vh;
+
+    overflow-y:auto;
+
+    background:#181818;
+
+    color:#fff;
+
+    padding:22px 20px 30px;
+
+    border-radius:
+        25px 25px 0 0;
+
+    z-index:2000;
+
+    transition:.35s;
+
+    box-shadow:
+        0 -10px 40px #000;
+}
+
+.sound-panel.show{
+    bottom:0;
+}
+
+.sound-head{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:20px;
+}
+
+.sound-head h2{
+    font-size:21px;
+}
+
+.close{
+
+    width:40px;
+    height:40px;
+
+    border:0;
+
+    border-radius:50%;
+
+    background:#303030;
+
+    color:#fff;
+
+    font-size:18px;
+
+    cursor:pointer;
+}
+
+.slider{
+    margin:20px 0;
+}
+
+.slider-label{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:9px;
+
+    color:#ddd;
+}
+
+.slider input{
+
+    width:100%;
+
+    accent-color:#fff;
+}
+
+.equalizer{
+
+    display:flex;
+
+    justify-content:space-around;
+
+    align-items:center;
+
+    height:175px;
+
+    background:#101010;
+
+    border-radius:18px;
+
+    padding:10px;
+
+    overflow:hidden;
+}
+
+.eq{
+
+    height:150px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+}
+
+.eq input{
+
+    width:120px;
+
+    transform:rotate(-90deg);
+
+    margin-top:45px;
+
+    accent-color:#fff;
+}
+
+.eq span{
+
+    margin-top:42px;
+
+    font-size:9px;
+
+    color:#888;
+}
+
+.presets{
+
+    display:flex;
+
+    gap:8px;
+
+    overflow-x:auto;
+
+    padding-bottom:5px;
+}
+
+.presets button{
+
+    flex:none;
+
+    padding:10px 15px;
+
+    border:1px solid #444;
+
+    border-radius:20px;
+
+    background:#252525;
+
+    color:#fff;
+
+    cursor:pointer;
+}
+
+.presets button.active{
+
+    background:#fff;
+
+    color:#000;
+}
+
+/* ================= DESKTOP ================= */
+
+@media(min-width:800px){
+
+    #playerContainer{
+
+        max-width:1000px;
+
+        margin:
+            0 auto 20px;
+
+        border-radius:16px;
+
+        top:72px;
+    }
+
+    #results{
+
+        max-width:1100px;
+
+        margin:auto;
+
+        display:grid;
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+        gap:20px;
+
+        padding:20px;
+    }
+
+    .video{
+
+        margin:0;
+
+        border-radius:15px;
+
+        box-shadow:
+            0 6px 25px
+            rgba(0,0,0,.08);
+
+        overflow:hidden;
+    }
+
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:600px){
+
+    .logo{
+        font-size:21px;
+    }
+
+    .header-icons{
+        font-size:24px;
+    }
+
+    .search input{
+        font-size:15px;
+    }
+
+    .title{
+        font-size:15px;
+    }
+
+    #playerContainer{
+
+        top:72px;
+
+        border-radius:
+            0 0 18px 18px;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= SPLASH ================= -->
+
+<div id="splashScreen">
+
+    <div class="splash-content">
+
+        <img
+            src="https://i.ibb.co.com/r2cGS8H4/1000012185.jpg"
+            class="splash-logo"
+            alt="JAURA MUSIC">
+
+        <div class="splash-loader"></div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= HEADER ================= -->
+
+<header class="header">
+
+    <div class="logo">
+        😈 JAWRA MUSIC
+    </div>
+
+    <div class="header-icons">
+
+        <span>⌕</span>
+
+        <button
+            class="menu-button"
+            onclick="toggleBgMenu()">
+            ⋮
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- ================= BACKGROUND MENU ================= -->
+
+<div class="bg-menu" id="bgMenu">
+
+    <div class="bg-title">
+        BACKGROUND
+    </div>
+
+    <button
+        class="bg-option"
+        onclick="changeBackground('#ffffff')">
+        ⚪ White
+    </button>
+
+    <button
+        class="bg-option"
+        onclick="changeBackground('#f5f5f5')">
+        ◻️ Soft White
+    </button>
+
+    <button
+        class="bg-option"
+        onclick="changeBackground('#111111')">
+        ⚫ Black
+    </button>
+
+    <button
+        class="bg-option"
+        onclick="changeBackground('#b30000')">
+        🔴 Red
+    </button>
+
+</div>
+
+
+<!-- ================= SEARCH ================= -->
+
+<div class="search-area">
+
+    <div class="search">
+
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="গান বা ভিডিও সার্চ করুন..."
+            onkeydown="searchEnter(event)">
+
+        <button onclick="searchMusic()">
+            🔍
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ================= CATEGORIES ================= -->
+
+<div class="categories">
+
+    <div
+        class="category active"
+        onclick="categorySearch('')">
+        All
+    </div>
+
+    <div
+        class="category"
+        onclick="categorySearch('Music')">
+        Music
+    </div>
+
+    <div
+        class="category"
+        onclick="categorySearch('Mix')">
+        Mixes
+    </div>
+
+    <div
+        class="category"
+        onclick="categorySearch('Lo-fi')">
+        Lo-fi
+    </div>
+
+    <div
+        class="category"
+        onclick="categorySearch('DJ')">
+        DJ
+    </div>
+
+    <div
+        class="category"
+        onclick="categorySearch('Relax')">
+        Relax
+    </div>
+
+    <div
+        class="category"
+        onclick="categorySearch('Bangla')">
+        Bangla
+    </div>
+
+</div>
+
+
+<!-- ================= STICKY PLAYER ================= -->
+
+<div id="playerContainer"></div>
+
+
+<!-- ================= VIDEO RESULTS ================= -->
+
+<div id="results">
+
+    <div class="home-message">
+
+        <h2>JAWRA MUSIC</h2>
+
+        <p>
+            গান খুঁজতে উপরের Search ব্যবহার করুন
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ================= SOUND PANEL ================= -->
+
+<div class="sound-panel" id="soundPanel">
+
+    <div class="sound-head">
+
+        <h2>
+            😈 JAURA Sound
+        </h2>
+
+        <button
+            class="close"
+            onclick="closeSound()">
+            ✕
+        </button>
+
+    </div>
+
+
+    <div class="slider">
+
+        <div class="slider-label">
+
+            <span>🔊 Volume</span>
+
+            <span id="volumeText">
+                80%
+            </span>
+
+        </div>
+
+        <input
+            id="volumeControl"
+            type="range"
+            min="0"
+            max="100"
+            value="80">
+
+    </div>
+
+
+    <div class="slider">
+
+        <div class="slider-label">
+
+            <span>🎵 Bass</span>
+
+            <span id="bassText">
+                50%
+            </span>
+
+        </div>
+
+        <input
+            id="bassControl"
+            type="range"
+            min="0"
+            max="100"
+            value="50">
+
+    </div>
+
+
+    <div class="slider">
+
+        <div class="slider-label">
+
+            <span>🎤 Vocal</span>
+
+            <span id="vocalText">
+                50%
+            </span>
+
+        </div>
+
+        <input
+            id="vocalControl"
+            type="range"
+            min="0"
+            max="100"
+            value="50">
+
+    </div>
+
+
+    <div class="slider">
+
+        <div class="slider-label">
+
+            <span>✨ 3D Sound</span>
+
+            <span id="threeText">
+                30%
+            </span>
+
+        </div>
+
+        <input
+            id="threeControl"
+            type="range"
+            min="0"
+            max="100"
+            value="30">
+
+    </div>
+
+
+    <div class="slider">
+
+        <div class="slider-label">
+
+            <span>🎚️ Treble</span>
+
+            <span id="trebleText">
+                50%
+            </span>
+
+        </div>
+
+        <input
+            id="trebleControl"
+            type="range"
+            min="0"
+            max="100"
+            value="50">
+
+    </div>
+
+
+    <h3 style="margin:22px 0 12px">
+        🎚️ Equalizer
+    </h3>
+
+
+    <div class="equalizer">
+
+        <div class="eq">
+
+            <input
+                type="range"
+                min="0"
+                max="100"
+                value="50">
+
+            <span>
+                60Hz
+            </span>
+
+        </div>
+
+
+        <div class="eq">
+
+            <input
+                type="range"
+                min="0"
+                max="100"
+                value="50">
+
+            <span>
+                230Hz
+            </span>
+
+        </div>
+
+
+        <div class="eq">
+
+            <input
+                type="range"
+                min="0"
+                max="100"
+                value="50">
+
+            <span>
+                910Hz
+            </span>
+
+        </div>
+
+
+        <div class="eq">
+
+            <input
+                type="range"
+                min="0"
+                max="100"
+                value="50">
+
+            <span>
+                3.6K
+            </span>
+
+        </div>
+
+
+        <div class="eq">
+
+            <input
+                type="range"
+                min="0"
+                max="100"
+                value="50">
+
+            <span>
+                14K
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <h3 style="margin:22px 0 12px">
+        🎵 Sound Preset
+    </h3>
+
+
+    <div class="presets">
+
+        <button
+            class="active"
+            onclick="preset(this,'normal')">
+            Normal
+        </button>
+
+        <button
+            onclick="preset(this,'bass')">
+            Bass Boost
+        </button>
+
+        <button
+            onclick="preset(this,'pop')">
+            Pop
+        </button>
+
+        <button
+            onclick="preset(this,'rock')">
+            Rock
+        </button>
+
+        <button
+            onclick="preset(this,'vocal')">
+            Vocal
+        </button>
+
+        <button
+            onclick="preset(this,'classical')">
+            Classical
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =================================================
+   🔑 YOUTUBE API KEY
+   ================================================= */
+
+const API_KEY =
+    "AIzaSyB0v6AdruCXxW4ZS_xKCrB8cnc6TItXwCs";
+
+
+/* =================================================
+   ▶️ CURRENT PLAYER
+   ================================================= */
+
+let currentVideoId="";
+let currentTitle="";
+let currentChannel="";
+
+
+/* =================================================
+   🚀 SPLASH
+   ================================================= */
+
+window.addEventListener("load",()=>{
+
+    setTimeout(()=>{
+
+        const splash =
+            document.getElementById(
+                "splashScreen"
+            );
+
+        if(splash){
+
+            splash.style.opacity="0";
+
+            splash.style.visibility=
+                "hidden";
+
+        }
+
+    },2500);
+
+});
+
+
+/* =================================================
+   🔍 ENTER SEARCH
+   ================================================= */
+
+function searchEnter(event){
+
+    if(event.key==="Enter"){
+
+        searchMusic();
+
+    }
+
+}
+
+
+/* =================================================
+   🏠 HOME VIDEOS
+   ================================================= */
+
+async function loadHomeVideos(){
+
+    closePlayer();
+
+    const results =
+        document.getElementById(
+            "results"
+        );
+
+    results.innerHTML=`
+
+        <div class="loading">
+
+            <div class="loading-spinner"></div>
+
+            নতুন ভিডিও লোড হচ্ছে...
+
+        </div>
+
+    `;
+
+    try{
+
+        const url =
+        "https://www.googleapis.com/youtube/v3/videos"+
+        "?part=snippet"+
+        "&chart=mostPopular"+
+        "&regionCode=BD"+
+        "&maxResults=20"+
+        "&key="+
+        encodeURIComponent(API_KEY);
+
+
+        const response =
+            await fetch(url);
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.error?.message ||
+                "YouTube API Error"
+            );
+
+        }
+
+
+        showResults(
+            data.items||[]
+        );
+
+
+    }catch(error){
+
+        results.innerHTML=`
+
+            <div class="error">
+
+                ❌ ভিডিও লোড করা যাচ্ছে না।
+
+                <br><br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =================================================
+   🔍 SEARCH
+   ================================================= */
+
+async function searchMusic(){
+
+    const input =
+        document
+        .getElementById(
+            "searchInput"
+        )
+        .value
+        .trim();
+
+
+    if(!input){
+
+        loadHomeVideos();
+
+        return;
+
+    }
+
+
+    closePlayer();
+
+
+    const results =
+        document.getElementById(
+            "results"
+        );
+
+
+    results.innerHTML=`
+
+        <div class="loading">
+
+            <div class="loading-spinner"></div>
+
+            🔍 YouTube-এ খোঁজা হচ্ছে...
+
+        </div>
+
+    `;
+
+
+    try{
+
+        const url =
+        "https://www.googleapis.com/youtube/v3/search"+
+        "?part=snippet"+
+        "&q="+
+        encodeURIComponent(input)+
+        "&type=video"+
+        "&maxResults=20"+
+        "&regionCode=BD"+
+        "&relevanceLanguage=bn"+
+        "&videoEmbeddable=true"+
+        "&key="+
+        encodeURIComponent(API_KEY);
+
+
+        const response =
+            await fetch(url);
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.error?.message ||
+                "YouTube API Error"
+            );
+
+        }
+
+
+        showResults(
+            data.items||[]
+        );
+
+
+    }catch(error){
+
+        results.innerHTML=`
+
+            <div class="error">
+
+                ❌ Search কাজ করছে না।
+
+                <br><br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =================================================
+   🎬 VIDEO LIST
+   ================================================= */
+
+function showResults(items){
+
+    const results =
+        document.getElementById(
+            "results"
+        );
+
+
+    if(!items.length){
+
+        results.innerHTML=`
+
+            <div class="loading">
+
+                কোনো ভিডিও পাওয়া যায়নি।
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    results.innerHTML="";
+
+
+    items.forEach(item=>{
+
+        let videoId="";
+
+
+        if(item.id?.videoId){
+
+            videoId =
+                item.id.videoId;
+
+        }else if(
+            typeof item.id==="string"
+        ){
+
+            videoId =
+                item.id;
+
+        }
+
+
+        if(!videoId){
+
+            return;
+
+        }
+
+
+        const title =
+            item.snippet.title;
+
+
+        const channel =
+            item.snippet.channelTitle;
+
+
+        const thumb =
+            item.snippet.thumbnails?.high?.url ||
+            item.snippet.thumbnails?.medium?.url ||
+            item.snippet.thumbnails?.default?.url;
+
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className="video";
+
+
+        card.onclick=()=>{
+
+            playVideo(
+                videoId,
+                title,
+                channel
+            );
+
+        };
+
+
+        card.innerHTML=`
+
+            <div class="thumbnail-wrap">
+
+                <img
+
+                    class="thumbnail"
+
+                    src="${escapeHtml(
+                        thumb
+                    )}"
+
+                    loading="lazy"
+
+                    alt="Video thumbnail">
+
+            </div>
+
+
+            <div class="video-info">
+
+                <div class="channel">
+
+                    🎧
+
+                </div>
+
+
+                <div class="details">
+
+                    <div class="title-row">
+
+                        <div class="title">
+
+                            ${escapeHtml(
+                                title
+                            )}
+
+                        </div>
+
+
+                        <div class="more">
+
+                            ⋮
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="meta">
+
+                        ${escapeHtml(
+                            channel
+                        )}
+
+                        • YouTube
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        results.appendChild(card);
+
+    });
+
+}
+
+
+/* =================================================
+   ▶️ PLAY VIDEO
+   PREMIUM STICKY 16:9 PLAYER
+   ================================================= */
+
+function playVideo(
+    videoId,
+    title,
+    channel
+){
+
+    currentVideoId =
+        videoId;
+
+    currentTitle =
+        title;
+
+    currentChannel =
+        channel;
+
+
+    const playerContainer =
+        document.getElementById(
+            "playerContainer"
+        );
+
+
+    /*
+       শুধু 16:9 video area।
+       কোনো title/channel/note নেই।
+    */
+
+    playerContainer.innerHTML=`
+
+        <div class="player-top">
+
+            <button
+                class="back"
+                onclick="closePlayer()">
+
+                ‹
+
+            </button>
+
+
+            <button
+                class="devil-button"
+                onclick="openSound()">
+
+                😈
+
+            </button>
+
+        </div>
+
+
+        <div class="youtube-player">
+
+            <iframe
+
+                id="ytFrame"
+
+                src=""
+
+                allow="
+                    autoplay;
+                    encrypted-media;
+                    picture-in-picture;
+                    fullscreen
+                "
+
+                allowfullscreen
+
+                referrerpolicy="
+                    strict-origin-when-cross-origin
+                ">
+
+            </iframe>
+
+        </div>
+
+    `;
+
+
+    playerContainer.style.display=
+        "block";
+
+
+    /*
+       YouTube Embed
+    */
+
+    let embed =
+        "https://www.youtube-nocookie.com/embed/"+
+        encodeURIComponent(videoId)+
+        "?autoplay=1"+
+        "&playsinline=1"+
+        "&rel=0";
+
+
+    const origin =
+        window.location.origin;
+
+
+    if(
+        origin &&
+        origin!=="null" &&
+        (
+            origin.startsWith(
+                "http://"
+            ) ||
+            origin.startsWith(
+                "https://"
+            )
+        )
+    ){
+
+        embed+=
+            "&enablejsapi=1"+
+            "&origin="+
+            encodeURIComponent(
+                origin
+            );
+
+    }
+
+
+    document.getElementById(
+        "ytFrame"
+    ).src=embed;
+
+
+    /*
+       Player-এ সুন্দরভাবে নিয়ে যাবে।
+       Page একদম top-এ পাঠাবে না।
+    */
+
+    setTimeout(()=>{
+
+        playerContainer.scrollIntoView({
+
+            behavior:"smooth",
+
+            block:"start"
+
+        });
+
+    },80);
+
+}
+
+
+/* =================================================
+   ⏹️ CLOSE PLAYER
+   ================================================= */
+
+function closePlayer(){
+
+    const playerContainer =
+        document.getElementById(
+            "playerContainer"
+        );
+
+
+    const frame =
+        document.getElementById(
+            "ytFrame"
+        );
+
+
+    if(frame){
+
+        frame.src="";
+
+    }
+
+
+    playerContainer.innerHTML="";
+
+    playerContainer.style.display=
+        "none";
+
+
+    currentVideoId="";
+    currentTitle="";
+    currentChannel="";
+
+}
+
+
+/* =================================================
+   😈 SOUND
+   ================================================= */
+
+function openSound(){
+
+    document
+    .getElementById(
+        "soundPanel"
+    )
+    .classList
+    .add("show");
+
+}
+
+
+function closeSound(){
+
+    document
+    .getElementById(
+        "soundPanel"
+    )
+    .classList
+    .remove("show");
+
+}
+
+
+/* =================================================
+   🎚️️ SOUND CONTROLS
+   ================================================= */
+
+[
+    "volume",
+    "bass",
+    "vocal",
+    "three",
+    "treble"
+].forEach(name=>{
+
+    const id =
+        name==="volume"
+        ? "volumeControl"
+        : name+"Control";
+
+
+    document
+    .getElementById(id)
+    .addEventListener(
+        "input",
+        function(){
+
+            document
+            .getElementById(
+                name+"Text"
+            )
+            .innerText =
+                this.value+"%";
+
+        }
+    );
+
+});
+
+
+/* =================================================
+   🎵 PRESETS
+   ================================================= */
+
+function preset(
+    button,
+    type
+){
+
+    document
+    .querySelectorAll(
+        ".presets button"
+    )
+    .forEach(b=>
+        b.classList.remove(
+            "active"
+        )
+    );
+
+
+    button.classList.add(
+        "active"
+    );
+
+
+    const vals={
+
+        normal:[
+            50,
+            50,
+            50,
+            30
+        ],
+
+        bass:[
+            90,
+            45,
+            55,
+            40
+        ],
+
+        pop:[
+            70,
+            65,
+            75,
+            45
+        ],
+
+        rock:[
+            80,
+            50,
+            80,
+            50
+        ],
+
+        vocal:[
+            35,
+            90,
+            65,
+            20
+        ],
+
+        classical:[
+            55,
+            70,
+            70,
+            35
+        ]
+
+    }[type];
+
+
+    [
+        "bassControl",
+        "vocalControl",
+        "trebleControl",
+        "threeControl"
+
+    ].forEach((id,i)=>{
+
+        const e =
+            document.getElementById(
+                id
+            );
+
+
+        e.value =
+            vals[i];
+
+
+        e.dispatchEvent(
+            new Event("input")
+        );
+
+    });
+
+}
+
+
+/* =================================================
+   🏷️ CATEGORY
+   ================================================= */
+
+function categorySearch(
+    category
+){
+
+    document
+    .querySelectorAll(
+        ".category"
+    )
+    .forEach(item=>
+        item.classList.remove(
+            "active"
+        )
+    );
+
+
+    document
+    .querySelectorAll(
+        ".category"
+    )
+    .forEach(item=>{
+
+        if(
+            item.innerText
+            .toLowerCase() ===
+            (category||"All")
+            .toLowerCase()
+        ){
+
+            item.classList.add(
+                "active"
+            );
+
+        }
+
+    });
+
+
+    if(!category){
+
+        document
+        .getElementById(
+            "searchInput"
+        )
+        .value="";
+
+
+        loadHomeVideos();
+
+        return;
+
+    }
+
+
+    document
+    .getElementById(
+        "searchInput"
+    )
+    .value =
+        category;
+
+
+    searchMusic();
+
+}
+
+
+/* =================================================
+   🎨 BACKGROUND
+   ================================================= */
+
+function toggleBgMenu(){
+
+    document
+    .getElementById(
+        "bgMenu"
+    )
+    .classList
+    .toggle("show");
+
+}
+
+
+function changeBackground(
+    color
+){
+
+    document.body.style.background =
+        color;
+
+
+    document
+    .getElementById(
+        "bgMenu"
+    )
+    .classList
+    .remove("show");
+
+}
+
+
+/* =================================================
+   🛡️ SECURITY
+   ================================================= */
+
+function escapeHtml(
+    text
+){
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        text || "";
+
+
+    return div.innerHTML;
+
+}
+
+
+function decodeHtml(
+    text
+){
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.innerHTML =
+        text || "";
+
+
+    return div.textContent;
+
+}
+
+
+/* =================================================
+   🚀 START
+   ================================================= */
+
+loadHomeVideos();
+
+</script>
+
+</body>
+</html>
